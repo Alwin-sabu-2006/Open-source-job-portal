@@ -1,0 +1,198 @@
+<%- include('admin-header') %>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <h5 class="h5 mb-0">Welcome, <%= user.name %>!</h5>
+        </div>
+    </div>
+
+    <div class="tab-content" id="adminTabContent">
+        <!-- Dashboard Section -->
+        <div class="page-section" id="dashboard-section">
+            <div class="row my-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Users</h5>
+                            <p class="card-text fs-2" id="total-users-count"><%= userCount %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Jobs</h5>
+                            <p class="card-text fs-2" id="total-jobs-count"><%= jobCount %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">Pending Employers</h5>
+                            <p class="card-text fs-2" id="pending-employers-count"><%= pendingEmployers.length %></p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-md-3">
+                    <div class="card text-white bg-secondary">
+                        <div class="card-body">
+                            <h5 class="card-title">Pending Jobs</h5>
+                            <p class="card-text fs-2" id="pending-jobs-count"><%= pendingJobs.length %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <canvas id="userRegistrationsChart"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <canvas id="jobsPostedChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="page-section" id="users-section" style="display: none;">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h2 class="card-title">Users</h2>
+                    <table id="usersTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Management Section -->
+        <div class="page-section" id="jobs-section" style="display: none;">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h2 class="card-title">Jobs</h2>
+                    <table id="jobsTable" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Employer</th>
+                                <th>Status</th>
+                                <th>Date Posted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Sidebar navigation
+    $('.nav-link').on('click', function(e) {
+        e.preventDefault();
+        $('.nav-link').removeClass('active');
+        $(this).addClass('active');
+
+        const target = $(this).data('target');
+        $('.page-section').hide();
+        $('#' + target).show();
+    });
+
+    // Trigger click on dashboard link to show it by default
+    $('.nav-link[data-target="dashboard-section"]').addClass('active');
+
+
+    // Datatables
+    $('#usersTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '/admin/api/users',
+        columns: [
+            { data: 'name' },
+            { data: 'email' },
+            { data: 'role' },
+            { data: 'verificationStatus' },
+            { data: 'actions' }
+        ]
+    });
+
+    $('#jobsTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '/admin/api/jobs',
+        columns: [
+            { data: 'title' },
+            { data: 'employer.name' },
+            { data: 'status' },
+            { data: 'createdAt' },
+            { data: 'actions' }
+        ]
+    });
+
+    // Charts
+    const userCtx = document.getElementById('userRegistrationsChart').getContext('2d');
+    new Chart(userCtx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: 'User Registrations',
+                data: [12, 19, 3, 5, 2, 3, 9], // Example data
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        }
+    });
+
+    const jobCtx = document.getElementById('jobsPostedChart').getContext('2d');
+    new Chart(jobCtx, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: 'Jobs Posted',
+                data: [5, 8, 15, 9, 7, 11, 13], // Example data
+                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+            }]
+        }
+    });
+
+    // Handle AJAX actions
+    $('#usersTable, #jobsTable').on('click', '.btn-action', function() {
+        const action = $(this).data('action');
+        const id = $(this).data('id');
+        const url = `/admin/api/${action}/${id}`;
+        
+        if (confirm('Are you sure?')) {
+            $.post(url, function(data) {
+                $('#usersTable').DataTable().ajax.reload();
+                $('#jobsTable').DataTable().ajax.reload();
+                // You can also update dashboard counts here
+            }).fail(function() {
+                alert('Action failed.');
+            });
+        }
+    });
+});
+</script>
+
+<%- include('admin-footer') %>

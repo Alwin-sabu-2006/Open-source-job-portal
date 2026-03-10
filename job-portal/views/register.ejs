@@ -1,0 +1,113 @@
+<%- include('header') %>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-transparent border-0 text-end">
+                    <a href="#" onclick="history.back(); return false;" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Go Back</a>
+                </div>
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">Create an Account</h2>
+
+                    <% if (typeof error !== 'undefined' && error) { %>
+                        <div class="alert alert-danger"><%= error %></div>
+                    <% } %>
+
+                    <form action="/auth/register" method="POST" class="pt-2">
+                        <div class="mb-3">
+                            <label for="role" class="form-label">I am a...</label>
+                            <select class="form-select" id="role" name="role" onchange="toggleEmployerFields()">
+                                <option value="job_seeker" <%= (typeof oldInput !== 'undefined' && oldInput.role === 'job_seeker') ? 'selected' : '' %>>Job Seeker</option>
+                                <option value="employer" <%= (typeof oldInput !== 'undefined' && oldInput.role === 'employer') ? 'selected' : '' %>>Employer</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= typeof oldInput !== 'undefined' ? oldInput.name : '' %>" required>
+                        </div>
+
+                        <!-- Employer-specific fields -->
+                        <div id="employer-fields" style="display: none;">
+                            <div class="mb-3">
+                                <label for="companyName" class="form-label">Company Name</label>
+                                <input type="text" class="form-control" id="companyName" name="companyName" value="<%= typeof oldInput !== 'undefined' ? oldInput.companyName : '' %>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyWebsite" class="form-label">Company Website (e.g., https://company.com)</label>
+                                <input type="url" class="form-control" id="companyWebsite" name="companyWebsite" placeholder="https://" value="<%= typeof oldInput !== 'undefined' ? oldInput.companyWebsite : '' %>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="jobTitle" class="form-label">Your Job Title / Position</label>
+                                <input type="text" class="form-control" id="jobTitle" name="jobTitle" value="<%= typeof oldInput !== 'undefined' ? oldInput.jobTitle : '' %>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyAddress" class="form-label">Company's Physical Address</label>
+                                <textarea class="form-control" id="companyAddress" name="companyAddress" rows="2"><%= typeof oldInput !== 'undefined' ? oldInput.companyAddress : '' %></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactPhone" class="form-label">Work Phone Number</label>
+                                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" value="<%= typeof oldInput !== 'undefined' ? oldInput.contactPhone : '' %>">
+                            </div>
+                            <p class="form-text text-muted">
+                                To ensure the authenticity of job postings, we require company details for verification. An administrator will review your submission.
+                            </p>
+                        </div>
+                        <!-- End of employer fields -->
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= typeof oldInput !== 'undefined' ? oldInput.email : '' %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" minlength="6" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <small>Already have an account? <a href="/auth/login">Login</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleEmployerFields() {
+        const role = document.getElementById('role').value;
+        const employerFields = document.getElementById('employer-fields');
+        const companyNameInput = document.getElementById('companyName');
+        const companyWebsiteInput = document.getElementById('companyWebsite');
+        const jobTitleInput = document.getElementById('jobTitle');
+        const companyAddressInput = document.getElementById('companyAddress');
+        const contactPhoneInput = document.getElementById('contactPhone');
+
+        if (role === 'employer') {
+            employerFields.style.display = 'block';
+            companyNameInput.required = true;
+            companyWebsiteInput.required = true;
+            jobTitleInput.required = true;
+            companyAddressInput.required = true;
+            contactPhoneInput.required = true;
+        } else {
+            employerFields.style.display = 'none';
+            companyNameInput.required = false;
+            companyWebsiteInput.required = false;
+            jobTitleInput.required = false;
+            companyAddressInput.required = false;
+            contactPhoneInput.required = false;
+        }
+    }
+
+    // Initialize fields on page load in case of a re-render with 'employer' pre-selected
+    document.addEventListener('DOMContentLoaded', toggleEmployerFields);
+</script>
+
+<%- include('footer') %>

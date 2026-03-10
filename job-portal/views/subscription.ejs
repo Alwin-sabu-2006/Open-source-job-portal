@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Subscription</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <a class="navbar-brand" href="/">Job Portal</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="/jobs/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/auth/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="mb-3 mt-3">
+            <a href="/jobs/dashboard" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Employer Subscription</h3>
+                    </div>
+                    <div class="card-body">
+                        <% if (locals.error && locals.error.length > 0) { %>
+                            <div class="alert alert-danger">
+                                <%= locals.error %>
+                            </div>
+                        <% } %>
+                        <% if (locals.success && locals.success.length > 0) { %>
+                            <div class="alert alert-success">
+                                <%= locals.success %>
+                            </div>
+                        <% } %>
+
+                        <h4 class="card-title">Why Subscribe?</h4>
+                        <ul class="list-group mb-4">
+                            <% benefits.forEach(function(benefit) { %>
+                                <li class="list-group-item"><%= benefit %></li>
+                            <% }); %>
+                        </ul>
+
+                        <div class="alert alert-info">
+                            <h4>Verification Payment</h4>
+                            <p class="mb-0">A one-time fee is required to verify your account and enable job posting.</p>
+                        </div>
+
+                        <form action="/jobs/subscription" method="POST">
+                            <div class="alert alert-warning text-center">
+                                <strong>Simulation Mode:</strong> No actual payment is required. Click the button below to activate your subscription.
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Activate Subscription (Simulation)</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

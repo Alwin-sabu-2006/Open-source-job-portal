@@ -1,0 +1,82 @@
+<%- include('header') %>
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Applicants for "<%= job.title %>"</h1>
+            <p class="text-muted">Review the candidates who have applied for this position.</p>
+        </div>
+        <a href="/jobs/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <% if (applications.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Applicant Name</th>
+                                <th>Applicant Email</th>
+                                <th>Cover Letter</th>
+                                <th>Resume</th>
+                                <th>Applied On</th>
+                                <th class="text-end" style="min-width: 200px;">Status / Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% applications.forEach(application => { %>
+                                <tr>
+                                    <td>
+                                        <% if (application.applicant) { %>
+                                            <strong><%= application.applicant.name %></strong>
+                                        <% } else { %>
+                                            <span class="text-muted">User not found</span>
+                                        <% } %>
+                                    </td>
+                                    <td><%= application.applicant ? application.applicant.email : 'N/A' %></td>
+                                    <td>
+                                        <% if (application.coverLetter) { %>
+                                            <div style="max-width: 250px; max-height: 80px; overflow-y: auto; font-size: 0.9em;"><%= application.coverLetter %></div>
+                                        <% } else { %>
+                                            <span class="text-muted">--</span>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (application.resume) { %>
+                                            <a href="<%= application.resume %>" target="_blank" class="btn btn-sm btn-outline-info">Download Resume</a>
+                                        <% } else { %>
+                                            <span class="text-muted">No Resume</span>
+                                        <% } %>
+                                    </td>
+                                    <td><%= new Date(application.createdAt).toLocaleDateString() %></td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end align-items-center">
+                                            <form action="/jobs/applications/<%= application._id %>/status" method="POST" class="d-flex align-items-center">
+                                                <select name="status" class="form-select form-select-sm" style="width: auto;">
+                                                    <option value="Submitted" <%= application.status === 'Submitted' ? 'selected' : '' %>>Submitted</option>
+                                                    <option value="Viewed" <%= application.status === 'Viewed' ? 'selected' : '' %>>Viewed</option>
+                                                    <option value="Accepted" <%= application.status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
+                                                    <option value="Rejected" <%= application.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="text-center p-4">
+                    <p class="text-muted">There are currently no applications for this job.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('footer') %>

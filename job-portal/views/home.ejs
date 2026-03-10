@@ -1,0 +1,77 @@
+<%- include('header') %>
+
+<style>
+    .job-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 12px;
+    }
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .job-card .card-title {
+        color: #333;
+        font-weight: 600;
+    }
+    .job-card .card-subtitle {
+        color: #555;
+    }
+    .job-card .badge {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Find Your Next Opportunity</h1>
+        <p class="lead text-muted">Browse through thousands of open positions from top companies.</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <form action="/jobs" method="GET" class="d-flex">
+                <input class="form-control form-control-lg me-2" type="search" name="search" placeholder="Search by job title, keyword, or company..." aria-label="Search" value="<%= searchTerm %>">
+                <button class="btn btn-primary btn-lg" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Job Listings -->
+    <div class="row g-4">
+        <% if (jobs.length > 0) { %>
+            <% jobs.forEach(job => { %>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card job-card h-100 shadow-sm border-0">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-1"><%= job.title %></h5>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= job.employer ? job.employer.name : 'Confidential' %></h6>
+                            <p class="card-text small text-muted">
+                                <i class="bi bi-geo-alt-fill me-1"></i><%= job.location %>
+                            </p>
+                            <div>
+                                <span class="badge bg-light text-dark me-1"><%= job.jobType %></span>
+                                <% if (job.salary) { %>
+                                    <span class="badge bg-light text-dark"><%= job.salary %></span>
+                                <% } %>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <a href="/jobs/<%= job._id %>" class="btn btn-outline-primary w-100">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading">No Jobs Found</h4>
+                    <p>Your search for "<%= searchTerm %>" did not match any job listings. Try a different keyword or check back later!</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('footer') %>
