@@ -1,0 +1,29 @@
+{
+  "name": "open-source-job-portal",
+  "version": "1.0.0",
+  "description": "A portal through which anyone who is passionate and skilled can find a job.(An internship project)",
+  "main": "server.js",
+  "scripts": {
+    "start": "cd job-portal && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.1.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.4.0",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

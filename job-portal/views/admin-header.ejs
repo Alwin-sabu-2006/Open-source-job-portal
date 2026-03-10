@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Admin CSS -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <title><%= typeof title !== 'undefined' ? title : 'Admin' %></title>
+</head>
+<body>
+    <div class="sidebar">
+        <h3 class="sidebar-heading">Admin Panel</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-target="dashboard-section">
+                    <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-target="users-section">
+                    <i class="bi bi-people-fill"></i> User Management
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-target="jobs-section">
+                    <i class="bi bi-briefcase-fill"></i> Job Management
+                </a>
+            </li>
+            <li class="nav-item mt-auto">
+                <a class="nav-link" href="/auth/logout">
+                    <i class="bi bi-box-arrow-left"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="container-fluid p-4">
